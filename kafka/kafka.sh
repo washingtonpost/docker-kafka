@@ -58,7 +58,6 @@ auto.create.topics.enable=true
 log.index.interval.bytes=4096
 log.index.size.max.bytes=10485760
 log.flush.interval.ms=20000
-log.flush.interval.messages=20000
 log.flush.scheduler.interval.ms=2000
 log.roll.hours=168
 log.retention.check.interval.ms=300000
