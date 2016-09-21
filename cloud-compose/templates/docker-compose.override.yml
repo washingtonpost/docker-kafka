@@ -1,0 +1,30 @@
+version: "2"
+services:
+  kafka:
+    image: washpost/kafka:0.10.0.1
+    restart: always
+    volumes:
+      - "/data:/data"
+    {%- if logging is defined and logging.driver is defined and logging.driver == "awslogs" %}
+    logging: 
+      driver: awslogs
+      options:
+        awslogs-group: {{ logging.meta.group }}
+        awslogs-stream: zookeeper-${NODE_ID}
+    {%- endif %}
+    environment:
+      INSTANCE_IP: ${INSTANCE_IP}
+      BROKER_ID: ${NODE_ID}
+      ZK_DNS: ${ZK_DNS}
+    {%- if NUM_PARTITIONS is defined %}
+      NUM_PARTITIONS: "{{ NUM_PARTITIONS }}"
+    {%- endif %}
+    {%- if LOG_RETENTION_HOURS is defined %}
+      LOG_RETENTION_HOURS: "{{ LOG_RETENTION_HOURS }}"
+    {%- endif %}
+    {%- if LOG_RETENTION_BYTES is defined %}
+      LOG_RETENTION_BYTES: "{{ LOG_RETENTION_BYTES }}"
+    {%- endif %}
+    {%- if LOG_SEGMENT_BYTES is defined %}
+      LOG_SEGMENT_BYTES: "{{ LOG_SEGMENT_BYTES }}"
+    {%- endif %}

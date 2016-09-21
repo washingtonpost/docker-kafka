@@ -1,0 +1,92 @@
+cluster:
+  name: ${CLUSTER_NAME}
+  search_path:
+    - ../docker-kafka/cloud-compose/templates
+    - ../docker-kafka
+  environment:
+  logging:
+    driver: awslogs 
+    meta:
+      group: /cloud-compose/${CLUSTER_NAME}
+  aws:
+    ami: ${IMAGE_ID} or ${IMAGE_NAME_TAG}
+    username: ${IMAGE_USERNAME}
+    security_groups: ${SECURITY_GROUP_ID}
+    ebs_optimized: false
+    instance_type: t2.medium
+    keypair: ${KEYPAIR} 
+    instance_policy: '{ "Statement": [ { "Action": [ "logs:CreateLogStream", "logs:PutLogEvents" ], "Effect": "Allow", "Resource": "*" } ] }'
+    volumes:
+      - name: root
+        size: 30G
+      - name: docker
+        size: 20G
+        block: /dev/xvdz
+        file_system: lvm2
+        meta:
+          group: docker
+          volumes:
+            - name: data 
+              size: 19G
+            - name: metadata
+              size: 900M 
+    tags:
+      datadog: monitored
+    nodes:
+      - id: 0
+        ip: ${CLUSTER_NODE_0_IP}
+        subnet: ${CLUSTER_NODE_0_SUBNET}
+      - id: 1
+        ip: ${CLUSTER_NODE_1_IP}
+        subnet: ${CLUSTER_NODE_1_SUBNET}
+      - id: 2
+        ip: ${CLUSTER_NODE_2_IP}
+        subnet: ${CLUSTER_NODE_2_SUBNET}
+      - id: 3
+        ip: ${CLUSTER_NODE_3_IP}
+        subnet: ${CLUSTER_NODE_3_SUBNET}
+      - id: 4
+        ip: ${CLUSTER_NODE_4_IP}
+        subnet: ${CLUSTER_NODE_4_SUBNET}
+      - id: 5
+        ip: ${CLUSTER_NODE_5_IP}
+        subnet: ${CLUSTER_NODE_5_SUBNET}
+datadog:
+  name: ${CLUSTER_NAME}
+  notify: 
+    - '@slack-${TEAM}'
+    - '@opsgenie-${TEAM}'
+  options:
+    notify_no_data: true
+    no_data_timeframe: 480
+  monitors:
+    -
+      tag: kafka-underreplicated-partitions
+      message: "The kafka partitions are under-replicated mostly likely because a servers is down." 
+      name: "Under-replicated Partitions"
+      query: 'avg(last_2h):sum:kafka.replication.under_replicated_partitions{clustername:%(name)s} >= 1'
+    - 
+      tag: high-cpu-load
+      message: 'The CPU load is too high on server {{host.name}}.'
+      name: 'High CPU Load'
+      query: 'avg(last_4h):avg:system.cpu.idle{clustername:%(name)s} by {host} < 25'
+    -
+      tag: low-root-disk-space
+      message: 'Running out of root disk space on server {{host.name}}'
+      name: 'Low Root Disk Space'
+      query: 'avg(last_1h):avg:system.disk.free{clustername:%(name)s,device:/dev/xvda1} by {host} < 10000000000'
+    -
+      tag: low-docker-data
+      message: 'Running low on LVM volume space for Docker data on server {{host.name}}.'
+      name: 'Low Docker Data Volume'
+      query: 'avg(last_1h):avg:docker.info.data_space_free{clustername:%(name)s} by {host} < 1000000000'
+    -
+      tag: low-docker-metadata
+      message: 'Running low on LVM volume space for Docker metadata on server {{host.name}}.'
+      name: 'Low Docker Metadata'
+      query: 'avg(last_1h):avg:docker.info.metadata_space_free{clustername:%(name)s} by {host} < 100000000'
+    -
+      tag: low-usable-memory
+      message: 'The usable memory is too low on server {{host.name}}.'
+      name: 'Low Usable Memory'
+      query: 'avg(last_15m):avg:system.mem.pct_usable{clustername:%(name)s} by {host} < 0.1'
