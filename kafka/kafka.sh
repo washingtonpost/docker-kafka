@@ -17,8 +17,8 @@ MISSING_VAR_MESSAGE="must be set"
 : ${BROKER_ID:?$MISSING_VAR_MESSAGE}
 : ${INSTANCE_IP:?$MISSING_VAR_MESSAGE}
 
-if [ -n "$ZK_DNS" ]; then
-  ZOOKEEPER=$(drill +short ${ZK_DNS}| grep -v '[a-zA-Z]' | xargs -I {} echo {}:2181 | paste -s -d',')
+if [ -n $ZK_DNS ]; then
+  ZOOKEEPER=$(drill ${ZK_DNS} | grep "^${ZK_DNS}." | awk '{ print $5 }' | xargs -I {} echo {}:2181 | paste -s -d',')
 fi
 
 : ${ZOOKEEPER:?$MISSING_VAR_MESSAGE}
@@ -134,6 +134,9 @@ esac
 
 exec \$base_dir/kafka-run-class.sh \$EXTRA_ARGS kafka.Kafka \$@
 EOF
+
+#TODO
+cat /opt/kafka/config/server.properties
 
 ARGS="/opt/kafka/config/server.properties" # optional start script arguments
 
