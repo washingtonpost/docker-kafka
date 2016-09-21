@@ -77,6 +77,12 @@ broker.id=${BROKER_ID}
 zookeeper.connect=${ZOOKEEPER}
 EOF
 
+if [ ! -z ${LOG_MESSAGE_FORMAT_VERSION} ]; then
+cat <<- EOF >> /opt/kafka/config/server.properties
+log.message.format.version=${LOG_MESSAGE_FORMAT_VERSION}
+EOF
+fi
+
 MEM_TOTAL=`cat /proc/meminfo | grep MemTotal | sed "s/MemTotal:\s*//" | sed "s/ kB//"`
 HEAP_SIZE=$(expr $MEM_TOTAL / 8192)
 if [ "$HEAP_SIZE" -lt "512" ]; then

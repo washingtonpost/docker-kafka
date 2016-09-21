@@ -5,6 +5,7 @@ RUN apk update && \
             openjdk8-jre \
             bash \
             drill \
+            coreutils \
             wget && \
      rm -rf /var/cache/apk/* 
 ENV JAVA_HOME=/usr/lib/jvm/default-jvm \

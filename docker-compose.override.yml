@@ -16,5 +16,6 @@ services:
       INSTANCE_IP: 10.212.55.107
       BROKER_ID: 1
       ZOOKEEPER: zookeeper
+      LOG_MESSAGE_FORMAT_VERSION: 0.9.0 
     links:
       - zookeeper

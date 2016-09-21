@@ -10,12 +10,15 @@ services:
       driver: awslogs
       options:
         awslogs-group: {{ logging.meta.group }}
-        awslogs-stream: zookeeper-${NODE_ID}
+        awslogs-stream: kafka-${NODE_ID}
     {%- endif %}
     environment:
       INSTANCE_IP: ${INSTANCE_IP}
       BROKER_ID: ${NODE_ID}
-      ZK_DNS: ${ZK_DNS}
+      ZK_DNS: {{ ZK_DNS }}
+    {%- if LOG_MESSAGE_FORMAT_VERSION is defined %}
+      LOG_MESSAGE_FORMAT_VERSION: "{{ LOG_MESSAGE_FORMAT_VERSION }}"
+    {%- endif %}
     {%- if NUM_PARTITIONS is defined %}
       NUM_PARTITIONS: "{{ NUM_PARTITIONS }}"
     {%- endif %}
