@@ -1,8 +1,10 @@
 version: '2'
 services:
   zookeeper:
+    container_name: kafka_zookeeper 
     image: washpost/zookeeper:3.4.9
     ports:
+      - "8181:8181"
       - "2181:2181"
       - "3888:3888"
       - "2888:2888"
@@ -15,7 +17,7 @@ services:
       REPL_FACTOR: 1
       INSTANCE_IP: 10.212.55.107
       BROKER_ID: 1
-      ZOOKEEPER: zookeeper
+      ZOOKEEPER: zookeeper:2181/local
       LOG_MESSAGE_FORMAT_VERSION: 0.9.0 
     links:
       - zookeeper

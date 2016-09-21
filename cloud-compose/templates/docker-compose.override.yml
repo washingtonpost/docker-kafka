@@ -15,7 +15,11 @@ services:
     environment:
       INSTANCE_IP: ${INSTANCE_IP}
       BROKER_ID: ${NODE_ID}
+      AVAILABILITY_ZONE: ${AVAILABILITY_ZONE}
       ZK_DNS: {{ ZK_DNS }}
+    {%- if ZK_PATH is defined %}
+      ZK_PATH: "{{ ZK_PATH }}"
+    {%- endif %}
     {%- if LOG_MESSAGE_FORMAT_VERSION is defined %}
       LOG_MESSAGE_FORMAT_VERSION: "{{ LOG_MESSAGE_FORMAT_VERSION }}"
     {%- endif %}

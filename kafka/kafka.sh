@@ -17,8 +17,8 @@ MISSING_VAR_MESSAGE="must be set"
 : ${BROKER_ID:?$MISSING_VAR_MESSAGE}
 : ${INSTANCE_IP:?$MISSING_VAR_MESSAGE}
 
-if [ -n $ZK_DNS ]; then
-  ZOOKEEPER=$(drill ${ZK_DNS} | grep "^${ZK_DNS}." | awk '{ print $5 }' | xargs -I {} echo {}:2181 | paste -s -d',')
+if [ ! -z $ZK_DNS ]; then
+  ZOOKEEPER=$(drill ${ZK_DNS} | grep "^${ZK_DNS}." | awk '{ print $5 }' | xargs -I {} echo {}:2181 | paste -s -d',')${ZK_PATH}
 fi
 
 : ${ZOOKEEPER:?$MISSING_VAR_MESSAGE}
@@ -32,7 +32,6 @@ socket.receive.buffer.bytes=1048576
 socket.send.buffer.bytes=1048576
 log.dirs=/data/kafka
 advertised.host.name=${INSTANCE_IP}
-broker.rack=${AVAILABILITY_ZONE}
 delete.topic.enable=true
 group.max.session.timeout.ms=300000
 
@@ -80,6 +79,12 @@ EOF
 if [ ! -z ${LOG_MESSAGE_FORMAT_VERSION} ]; then
 cat <<- EOF >> /opt/kafka/config/server.properties
 log.message.format.version=${LOG_MESSAGE_FORMAT_VERSION}
+EOF
+fi
+
+if [ ! -z ${AVAILABILITY_ZONE} ]; then
+cat <<- EOF >> /opt/kafka/config/server.properties
+broker.rack=${AVAILABILITY_ZONE}
 EOF
 fi
 
@@ -135,14 +140,11 @@ esac
 exec \$base_dir/kafka-run-class.sh \$EXTRA_ARGS kafka.Kafka \$@
 EOF
 
-#TODO
-cat /opt/kafka/config/server.properties
-
 ARGS="/opt/kafka/config/server.properties" # optional start script arguments
 
-ZK_SERVER=$(echo "${ZOOKEEPER}" | tr ',' '\n' | tr ':' '\n' | head -n 1)
+ZK_SERVER=$(echo "${ZOOKEEPER}" | tr ',' '\n' | tr ':' '\n' | tr '/' '\n' | head -n 1)
 while ! nc -z ${ZK_SERVER} 2181 >/dev/null 2>&1; do
-  echo 'waiting for zookeeper'
+  echo "waiting for zookeeper ${ZK_SERVER}"
   sleep 2
 done
 
