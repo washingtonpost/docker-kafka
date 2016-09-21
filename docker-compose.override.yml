@@ -1,0 +1,20 @@
+version: '2'
+services:
+  zookeeper:
+    image: washpost/zookeeper:3.4.9
+    ports:
+      - "2181:2181"
+      - "3888:3888"
+      - "2888:2888"
+    environment:
+      CLUSTER_SIZE: 1
+      CONFIG_TYPE: file
+  kafka:
+    build: .
+    environment:
+      REPL_FACTOR: 1
+      INSTANCE_IP: 10.212.55.107
+      BROKER_ID: 1
+      ZOOKEEPER: zookeeper
+    links:
+      - zookeeper
