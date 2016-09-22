@@ -22,53 +22,35 @@ if [ ! -z $ZK_DNS ]; then
 fi
 
 : ${ZOOKEEPER:?$MISSING_VAR_MESSAGE}
+MAX_MESSAGE_BYTES="${MAX_MESSAGE_BYTES:-10485760}"
 
 cat <<- EOF > /opt/kafka/config/server.properties
-port=9092
+num.io.threads=16
 num.network.threads=8
-num.io.threads=8
-socket.request.max.bytes=104857600
 socket.receive.buffer.bytes=1048576
 socket.send.buffer.bytes=1048576
+
+port=9092
 log.dirs=/data/kafka
 advertised.host.name=${INSTANCE_IP}
 delete.topic.enable=true
-group.max.session.timeout.ms=300000
 
 # Replication configurations
-num.replica.fetchers=4
-replica.fetch.max.bytes=10485760
-replica.fetch.wait.max.ms=500
-replica.high.watermark.checkpoint.interval.ms=5000
-replica.socket.timeout.ms=30000
-replica.socket.receive.buffer.bytes=65536
+num.replica.fetchers=8
+message.max.bytes=${MAX_MESSAGE_BYTES}
+replica.fetch.max.bytes=${REPLICA_FETCH_MAX_BYTES:-${MAX_MESSAGE_BYTES}}
+log.segment.bytes=${LOG_SEGMENT_BYTES:-1073741824}
 replica.lag.time.max.ms=60000
-controller.socket.timeout.ms=30000
-controller.message.queue.size=10
 auto.leader.rebalance.enable=true
-controlled.shutdown.enable=true
 default.replication.factor=${REPL_FACTOR}
 
 # Log configuration
 num.partitions=${NUM_PARTITIONS:-12}
 log.retention.hours=${LOG_RETENTION_HOURS:-168}
-message.max.bytes=10000000
 auto.create.topics.enable=true
-log.index.interval.bytes=4096
-log.index.size.max.bytes=10485760
-log.flush.interval.ms=10000
-log.flush.scheduler.interval.ms=2000
-log.roll.hours=168
-log.retention.check.interval.ms=300000
-log.segment.bytes=${LOG_SEGMENT_BYTES:-1073741824}
-
-# Socket server configuration
-queued.max.requests=16
-fetch.purgatory.purge.interval.requests=100
-producer.purgatory.purge.interval.requests=100
 
 # ZK configuration
-zookeeper.connection.timeout.ms=1000000
+zookeeper.session.timeout.ms=12000  
 
 broker.id=${BROKER_ID}
 zookeeper.connect=${ZOOKEEPER}
