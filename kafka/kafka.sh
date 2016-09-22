@@ -25,8 +25,9 @@ fi
 MAX_MESSAGE_BYTES="${MAX_MESSAGE_BYTES:-10485760}"
 
 cat <<- EOF > /opt/kafka/config/server.properties
-num.io.threads=16
-num.network.threads=8
+num.io.threads=${NUM_IO_THREADS:-8}
+num.replica.fetchers=${NUM_REPLICA_FETCHERS:-4}
+num.network.threads=${NUM_NETWORK_THREADS:-8}
 socket.receive.buffer.bytes=1048576
 socket.send.buffer.bytes=1048576
 
@@ -36,7 +37,6 @@ advertised.host.name=${INSTANCE_IP}
 delete.topic.enable=true
 
 # Replication configurations
-num.replica.fetchers=8
 message.max.bytes=${MAX_MESSAGE_BYTES}
 replica.fetch.max.bytes=${REPLICA_FETCH_MAX_BYTES:-${MAX_MESSAGE_BYTES}}
 log.segment.bytes=${LOG_SEGMENT_BYTES:-1073741824}
