@@ -2,17 +2,7 @@
 
 START_SCRIPT=/opt/kafka/bin/kafka-server-start.sh
 PID_FILE=/var/run/kafka.pid
-# Convert the last two octets of the private ip into a broker ip since these will be unique within a VPC with a maximum CIDR of /16
-IFS=. read -r a b c d <<< "${INSTANCE_IP}"
-[[  $BROKER_ID && ${BROKER_ID-x} ]] || BROKER_ID=$((c * 256 + d))
-[[  $REPL_FACTOR && ${REPL_FACTOR-x} ]] || REPL_FACTOR=3
 
-# ***********************************************
-# ***********************************************
-# chkconfig: 2345 95 05
-# source function library
-# . /etc/rc.d/init.d/functions
-[ -f /etc/default/kafka ] && . /etc/default/kafka
 MISSING_VAR_MESSAGE="must be set"
 : ${BROKER_ID:?$MISSING_VAR_MESSAGE}
 : ${INSTANCE_IP:?$MISSING_VAR_MESSAGE}
@@ -28,29 +18,29 @@ cat <<- EOF > /opt/kafka/config/server.properties
 num.io.threads=${NUM_IO_THREADS:-8}
 num.replica.fetchers=${NUM_REPLICA_FETCHERS:-4}
 num.network.threads=${NUM_NETWORK_THREADS:-8}
-socket.receive.buffer.bytes=1048576
-socket.send.buffer.bytes=1048576
+socket_receive_buffer_bytes=${SOCKET_RECEIVE_BUFFER_BYTES:-1048576}
+socket_send_buffer_bytes=${SOCKET_SEND_BUFFER_BYTES:-1048576}
 
-port=9092
-log.dirs=/data/kafka
+port=${KAKFKA_PORT-9092}
+log.dirs=${LOG_DIRS:-/data/kafka}
 advertised.host.name=${INSTANCE_IP}
-delete.topic.enable=true
+delete.topic.enable=${DELETE_TOPIC_ENABLE:-true}
 
 # Replication configurations
 message.max.bytes=${MAX_MESSAGE_BYTES}
 replica.fetch.max.bytes=${REPLICA_FETCH_MAX_BYTES:-${MAX_MESSAGE_BYTES}}
 log.segment.bytes=${LOG_SEGMENT_BYTES:-1073741824}
-replica.lag.time.max.ms=60000
-auto.leader.rebalance.enable=true
-default.replication.factor=${REPL_FACTOR}
+replica_lag_time_max_ms=${REPLICA_LAG_TIME_MAX_MS:-60000}
+auto_leader_rebalance_enable=${AUTO_LEADER_REBALANCE_ENABLE:-true}
+default.replication.factor=${REPL_FACTOR:-3}
 
 # Log configuration
 num.partitions=${NUM_PARTITIONS:-12}
 log.retention.hours=${LOG_RETENTION_HOURS:-168}
-auto.create.topics.enable=true
+auto_create_topics_enable=${AUTO_CREATE_TOPICS_ENABLE:-true}
 
 # ZK configuration
-zookeeper.session.timeout.ms=12000  
+zookeeper_session_timeout_ms=${ZOOKEEPER_SESSION_TIMEOUT_MS:-12000}
 
 broker.id=${BROKER_ID}
 zookeeper.connect=${ZOOKEEPER}
@@ -68,13 +58,15 @@ broker.rack=${AVAILABILITY_ZONE}
 EOF
 fi
 
-MEM_TOTAL=`cat /proc/meminfo | grep MemTotal | sed "s/MemTotal:\s*//" | sed "s/ kB//"`
-HEAP_SIZE=$(expr $MEM_TOTAL / 4096)
-if [ "$HEAP_SIZE" -lt "512" ]; then
-  HEAP_SIZE=512
-fi
-if [ "$HEAP_SIZE" -gt "8192" ]; then
-  HEAP_SIZE=8192
+if [ -z ${HEAP_SIZE} ]; then
+  MEM_TOTAL=`cat /proc/meminfo | grep MemTotal | sed "s/MemTotal:\s*//" | sed "s/ kB//"`
+  HEAP_SIZE=$(expr $MEM_TOTAL / 4096)
+  if [ "$HEAP_SIZE" -lt "512" ]; then
+    HEAP_SIZE=512
+  fi
+  if [ "$HEAP_SIZE" -gt "8192" ]; then
+    HEAP_SIZE=8192
+  fi
 fi
 
 cat <<- EOF > /opt/kafka/bin/kafka-server-start.sh
