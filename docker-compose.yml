@@ -2,6 +2,3 @@ version: '2'
 services:
   kafka:
     container_name: kafka 
-    ports:
-      - "9092:9092"
-      - "127.0.0.1:9999:9999"

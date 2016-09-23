@@ -3,6 +3,7 @@ services:
   kafka:
     image: washpost/kafka:0.10.0.1
     restart: always
+    network_mode: host
     volumes:
       - "/data:/data"
     {%- if logging is defined and logging.driver is defined and logging.driver == "awslogs" %}
@@ -19,6 +20,15 @@ services:
       ZK_DNS: {{ ZK_DNS }}
     {%- if ZK_PATH is defined %}
       ZK_PATH: "{{ ZK_PATH }}"
+    {%- endif %}
+    {%- if NUM_IO_THREADS is defined %}
+      NUM_IO_THREADS: "{{ NUM_IO_THREADS }}"
+    {%- endif %}
+    {%- if NUM_REPLICA_FETCHERS is defined %}
+      NUM_REPLICA_FETCHERS: "{{ NUM_REPLICA_FETCHERS }}"
+    {%- endif %}
+    {%- if NUM_NETWORK_THREADS is defined %}
+      NUM_NETWORK_THREADS: "{{ NUM_NETWORK_THREADS }}"
     {%- endif %}
     {%- if LOG_DIRS is defined %}
       LOG_DIRS: "{{ LOG_DIRS }}"

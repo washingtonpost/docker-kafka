@@ -13,6 +13,9 @@ services:
       CONFIG_TYPE: file
   kafka:
     build: .
+    ports:
+      - "9092:9092"
+      - "127.0.0.1:9999:9999"
     environment:
       REPL_FACTOR: 1
       INSTANCE_IP: 10.212.55.107
