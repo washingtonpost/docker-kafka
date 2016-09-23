@@ -1,8 +1,12 @@
 # system.mounts.sh
 {%- for volume in aws.volumes %}
 
-{%- if volume.meta is defined and volume.meta.format is defined and volume.snapshot is not defined %}
+{%- if volume.meta is defined and volume.meta.format is defined and volume.meta.format and volume.snapshot is not defined %}
+  {%- if volume.meta.journal is defined and not volume.meta.journal %}
+mkfs -t {{ volume.file_system }} -O ^has_journal {{ volume.block }}
+  {%- else %}
 mkfs -t {{ volume.file_system }} {{ volume.block }}
+  {%- endif %}
 {%- endif %}
 
 {%- if volume.meta is defined and volume.meta.mount is defined %}
