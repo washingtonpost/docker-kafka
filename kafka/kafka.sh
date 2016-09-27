@@ -35,7 +35,7 @@ auto_leader_rebalance_enable=${AUTO_LEADER_REBALANCE_ENABLE:-true}
 default.replication.factor=${DEFAULT_REPLICATION_FACTOR:-3}
 
 # Log configuration
-num.partitions=${NUM_PARTITIONS:-18}
+num.partitions=${NUM_PARTITIONS:-6}
 log.retention.hours=${LOG_RETENTION_HOURS:-168}
 auto_create_topics_enable=${AUTO_CREATE_TOPICS_ENABLE:-true}
 
