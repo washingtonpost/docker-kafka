@@ -22,8 +22,8 @@ socket_receive_buffer_bytes=${SOCKET_RECEIVE_BUFFER_BYTES:-1048576}
 socket_send_buffer_bytes=${SOCKET_SEND_BUFFER_BYTES:-1048576}
 
 port=${KAKFKA_PORT-9092}
-log.dirs=${LOG_DIRS:-/data/kafka}
 advertised.host.name=${INSTANCE_IP}
+log.dirs=${LOG_DIRS:-/data/kafka}
 delete.topic.enable=${DELETE_TOPIC_ENABLE:-true}
 
 # Replication configurations
@@ -32,7 +32,7 @@ replica.fetch.max.bytes=${REPLICA_FETCH_MAX_BYTES:-${MAX_MESSAGE_BYTES}}
 log.segment.bytes=${LOG_SEGMENT_BYTES:-1073741824}
 replica_lag_time_max_ms=${REPLICA_LAG_TIME_MAX_MS:-60000}
 auto_leader_rebalance_enable=${AUTO_LEADER_REBALANCE_ENABLE:-true}
-default.replication.factor=${REPL_FACTOR:-3}
+default.replication.factor=${DEFAULT_REPLICATION_FACTOR:-3}
 
 # Log configuration
 num.partitions=${NUM_PARTITIONS:-12}

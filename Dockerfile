@@ -20,8 +20,9 @@ RUN wget  http://mirror.cc.columbia.edu/pub/software/apache/kafka/${KAFKA_VERSIO
     rm -f /tmp/kafka.tgz
 
 ADD kafka/kafka.sh /etc/init.d/kafka
+ADD kafka/kafka-producer-perf-test.sh /opt/kafka/bin/kafka-producer-perf-test.sh
 ADD kafka/log4j.properties /opt/kafka/config/log4j.properties
-RUN chmod +x /etc/init.d/kafka
+RUN chmod +x /etc/init.d/kafka /opt/kafka/bin/kafka-producer-perf-test.sh
 
 EXPOSE 9092
 

@@ -1,0 +1,15 @@
+version: '2'
+services:
+  perf:
+    container_name: kafka_perf
+    build: .
+    command: /opt/kafka/bin/kafka-producer-perf-test.sh
+    environment:
+      KAFKA: kafka:9092
+      ZOOKEEPER: zookeeper:2181/local
+    links:
+      - zookeeper
+      - kafka 
+  kafka:
+    environment:
+      INSTANCE_IP: kafka
