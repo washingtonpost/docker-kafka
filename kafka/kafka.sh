@@ -16,8 +16,8 @@ MAX_MESSAGE_BYTES="${MAX_MESSAGE_BYTES:-10485760}"
 
 cat <<- EOF > /opt/kafka/config/server.properties
 num.io.threads=${NUM_IO_THREADS:-8}
-num.replica.fetchers=${NUM_REPLICA_FETCHERS:-4}
-num.network.threads=${NUM_NETWORK_THREADS:-8}
+num.replica.fetchers=${NUM_REPLICA_FETCHERS:-1}
+num.network.threads=${NUM_NETWORK_THREADS:-3}
 socket_receive_buffer_bytes=${SOCKET_RECEIVE_BUFFER_BYTES:-1048576}
 socket_send_buffer_bytes=${SOCKET_SEND_BUFFER_BYTES:-1048576}
 
