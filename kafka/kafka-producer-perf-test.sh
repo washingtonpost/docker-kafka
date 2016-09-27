@@ -18,8 +18,14 @@ if [ "x$KAFKA_HEAP_OPTS" = "x" ]; then
       export KAFKA_HEAP_OPTS="-Xmx512M"
 fi
 
+if [ ! -z $KAFKA_DNS ]; then
+	KAFKA_BROKERS=$(drill ${KAFKA_DNS} | grep "^${KAFKA_DNS}." | awk '{ print $5 }' | xargs -I {} echo {}:9092 | paste -s -d',')${ZK_PATH}
+fi
 
-EXEC="$(dirname $0)/kafka-run-class.sh org.apache.kafka.tools.ProducerPerformance --topic ${TOPIC:-perf_test} --num-records ${NUM_RECORDS:-10000} --record-size ${RECORD_SIZE:-1000} --throughput ${THROUGHPUT:-1000} --producer-props bootstrap.servers=${KAFKA} acks=${ACKS:-1}"
+MISSING_VAR_MESSAGE="must be set"
+: ${KAFKA_BROKERS:?$MISSING_VAR_MESSAGE}
+
+EXEC="$(dirname $0)/kafka-run-class.sh org.apache.kafka.tools.ProducerPerformance --topic ${TOPIC:-kafka_performance_test} --num-records ${NUM_RECORDS:-10000} --record-size ${RECORD_SIZE:-1000} --throughput ${THROUGHPUT:-1000} --producer-props bootstrap.servers=${KAFKA_BROKERS} acks=${ACKS:-1}"
 
 echo $EXEC
 exec $EXEC
