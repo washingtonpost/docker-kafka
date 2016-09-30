@@ -3,6 +3,7 @@
 START_SCRIPT=/opt/kafka/bin/kafka-server-start.sh
 PID_FILE=/var/run/kafka.pid
 
+export KAFKA_GC_LOG_OPTS=${KAFKA_GC_LOG_OPTS:-" "}
 MISSING_VAR_MESSAGE="must be set"
 : ${BROKER_ID:?$MISSING_VAR_MESSAGE}
 : ${INSTANCE_IP:?$MISSING_VAR_MESSAGE}
