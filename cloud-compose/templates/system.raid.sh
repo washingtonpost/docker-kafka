@@ -4,7 +4,7 @@ yum -y install mdadm
 
 {%- for raid in aws.raid %}
 
-mdadm --create --verbose {{ raid.block }} --level={{ raid.level }} --name={{ raid.name }} --raid-devices={{ raid.devices|length }} {{ raid.devices|join(' ') }}
+mdadm --create --verbose {{ raid.block }} --level={{ raid.level }} --chunk={{ raid.chunk|default("1024", true) }} --name={{ raid.name }} --raid-devices={{ raid.devices|length }} {{ raid.devices|join(' ') }}
 {%- if raid.journal is defined and not raid.journal %}
 mkfs -t {{ raid.file_system }} -O ^has_journal {{ raid.block }}
 {%- else %}
