@@ -13,6 +13,7 @@ mkfs -t {{ raid.file_system }} {{ raid.block }}
 echo -e '{{ raid.block }}\t{{ raid.mount }}\t{{ raid.file_system }}\t{{ raid.options|default("defaults,noatime", true) }}\t0\t0' >> /etc/fstab
 mkdir -p {{ raid.mount }} 
 mount {{ raid.mount }}
+mdadm --verbose --detail --scan >> /etc/mdadm.conf
 
 {%- endfor %}
 {%- endif %}
