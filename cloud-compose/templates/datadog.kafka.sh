@@ -1,14 +1,13 @@
 # datadog.kafka.sh 
-cat <<- 'EOF' > /etc/dd-agent/conf.d/kafka.yaml
+cat <<- EOF > /etc/dd-agent/conf.d/kafka.yaml
 instances:
-	-   host: localhost
-			name: kafka
-			port: 9999 # This is the JMX port on which Kafka exposes its metrics (usually 9999)
-			tools_jar_path: /usr/lib/jvm/java/lib/tools.jar # To be set when process_name_regex is set
-			java_bin_path: /usr/lib/jvm/java/bin/java #Optional, should be set if the agent cannot find your java executable
-			tags:
-				kafka: {{ CLUSTER_NAME }} 
-
+  -   host: localhost
+      name: kafka
+      port: 9999 # This is the JMX port on which Kafka exposes its metrics (usually 9999)
+      tools_jar_path: /usr/lib/jvm/java/lib/tools.jar # To be set when process_name_regex is set
+      java_bin_path: /usr/lib/jvm/java/bin/java #Optional, should be set if the agent cannot find your java executable
+      tags:
+        broker: {{ CLUSTER_NAME }}-${NODE_ID} 
 init_config:
   is_jmx: true
 
