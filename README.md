@@ -19,10 +19,10 @@ cloud-compose cluster up
 
 # FAQ
 ## How is kafka configured?
-TODO
+See cloud-compose/templates/docker-compose.override.yml for a list of environment variables that can alter the default Kafka configuration properties.
 
 ## How do I safely upgrade the cluster?
-TODO
+If you use the default replication factor of 3 and run the cluster across 3 availability zones, you can safely upgrade one zone at a time. Start by checking that under replicated partitions is zero, then terminate all the servers in one availability zone. Wait fot the under replicated partitions to return to zero before continuing with the next zone. 
 
 ## How do I manage secrets?
 Secrets can be configured using environment variables. [Envdir](https://pypi.python.org/pypi/envdir) is highly recommended as a tool for switching between sets of environment variables in case you need to manage multiple clusters.
