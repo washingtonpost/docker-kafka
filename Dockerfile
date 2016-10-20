@@ -2,6 +2,7 @@ FROM alpine:3.4
 RUN apk update && \
     apk upgrade && \
     apk add --update --no-cache \
+            libc6-compat \
             openjdk8-jre \
             bash \
             drill \
