@@ -1,7 +1,7 @@
 version: "2"
 services:
   kafka:
-    image: washpost/kafka:0.10.0.1
+    image: washpost/kafka:0.10.1.0
     restart: always
     network_mode: host
     volumes:

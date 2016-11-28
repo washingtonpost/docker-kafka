@@ -10,7 +10,7 @@ RUN apk update && \
             wget && \
      rm -rf /var/cache/apk/* 
 ENV JAVA_HOME=/usr/lib/jvm/default-jvm \
-    KAFKA_VERSION=0.10.0.1
+    KAFKA_VERSION=0.10.1.0
 
 RUN wget  http://mirror.cc.columbia.edu/pub/software/apache/kafka/${KAFKA_VERSION}/kafka_2.11-${KAFKA_VERSION}.tgz -O /tmp/kafka.tgz && \
     mkdir -p /opt && \
