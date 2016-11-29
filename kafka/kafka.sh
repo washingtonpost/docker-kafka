@@ -53,6 +53,12 @@ log.message.format.version=${LOG_MESSAGE_FORMAT_VERSION}
 EOF
 fi
 
+if [ ! -z ${INTER_BROKER_PROTOCOL_VERSION} ]; then
+cat <<- EOF >> /opt/kafka/config/server.properties
+inter.broker.protocol.version=${INTER_BROKER_PROTOCOL_VERSION}
+EOF
+fi
+
 if [ ! -z ${AVAILABILITY_ZONE} ]; then
 cat <<- EOF >> /opt/kafka/config/server.properties
 broker.rack=${AVAILABILITY_ZONE}

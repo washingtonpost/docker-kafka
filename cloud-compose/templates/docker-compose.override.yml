@@ -39,6 +39,9 @@ services:
     {%- if LOG_MESSAGE_FORMAT_VERSION is defined %}
       LOG_MESSAGE_FORMAT_VERSION: "{{ LOG_MESSAGE_FORMAT_VERSION }}"
     {%- endif %}
+    {%- if INTER_BROKER_PROTOCOL_VERSION is defined %}
+      INTER_BROKER_PROTOCOL_VERSION: "{{ INTER_BROKER_PROTOCOL_VERSION }}"
+    {%- endif %}
     {%- if DEFAULT_REPLICATION_FACTOR is defined %}
       DEFAULT_REPLICATION_FACTOR: "{{ DEFAULT_REPLICATION_FACTOR }}"
     {%- endif %}
