@@ -19,8 +19,8 @@ cat <<- EOF > /opt/kafka/config/server.properties
 num.io.threads=${NUM_IO_THREADS:-8}
 num.replica.fetchers=${NUM_REPLICA_FETCHERS:-1}
 num.network.threads=${NUM_NETWORK_THREADS:-3}
-socket_receive_buffer_bytes=${SOCKET_RECEIVE_BUFFER_BYTES:-1048576}
-socket_send_buffer_bytes=${SOCKET_SEND_BUFFER_BYTES:-1048576}
+socket.receive.buffer.bytes=${SOCKET_RECEIVE_BUFFER_BYTES:-1048576}
+socket.send.buffer.bytes=${SOCKET_SEND_BUFFER_BYTES:-1048576}
 
 port=${KAKFKA_PORT-9092}
 advertised.host.name=${INSTANCE_IP}
@@ -31,17 +31,17 @@ delete.topic.enable=${DELETE_TOPIC_ENABLE:-true}
 message.max.bytes=${MAX_MESSAGE_BYTES}
 replica.fetch.max.bytes=${REPLICA_FETCH_MAX_BYTES:-${MAX_MESSAGE_BYTES}}
 log.segment.bytes=${LOG_SEGMENT_BYTES:-1073741824}
-replica_lag_time_max_ms=${REPLICA_LAG_TIME_MAX_MS:-60000}
-auto_leader_rebalance_enable=${AUTO_LEADER_REBALANCE_ENABLE:-true}
+replica.lag.time.max.ms=${REPLICA_LAG_TIME_MAX_MS:-60000}
+auto.leader.rebalance.enable=${AUTO_LEADER_REBALANCE_ENABLE:-true}
 default.replication.factor=${DEFAULT_REPLICATION_FACTOR:-3}
 
 # Log configuration
 num.partitions=${NUM_PARTITIONS:-6}
 log.retention.hours=${LOG_RETENTION_HOURS:-168}
-auto_create_topics_enable=${AUTO_CREATE_TOPICS_ENABLE:-true}
+auto.create.topics.enable=${AUTO_CREATE_TOPICS_ENABLE:-true}
 
 # ZK configuration
-zookeeper_session_timeout_ms=${ZOOKEEPER_SESSION_TIMEOUT_MS:-12000}
+zookeeper.session.timeout.ms=${ZOOKEEPER_SESSION_TIMEOUT_MS:-12000}
 
 broker.id=${BROKER_ID}
 zookeeper.connect=${ZOOKEEPER}
