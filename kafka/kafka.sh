@@ -68,11 +68,11 @@ fi
 if [ -z ${HEAP_SIZE} ]; then
   MEM_TOTAL=`cat /proc/meminfo | grep MemTotal | sed "s/MemTotal:\s*//" | sed "s/ kB//"`
   HEAP_SIZE=$(expr $MEM_TOTAL / 4096)
-  if [ "$HEAP_SIZE" -lt "512" ]; then
-    HEAP_SIZE=512
+  if [ "$HEAP_SIZE" -lt "1024" ]; then
+    HEAP_SIZE=1024
   fi
-  if [ "$HEAP_SIZE" -gt "8192" ]; then
-    HEAP_SIZE=8192
+  if [ "$HEAP_SIZE" -gt "5120" ]; then
+    HEAP_SIZE=5120
   fi
 fi
 
