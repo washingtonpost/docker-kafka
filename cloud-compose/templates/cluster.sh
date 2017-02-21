@@ -1,5 +1,6 @@
 #!/bin/bash
 {% include "cloud.environment.sh" %}
+{% include "secrets.environment.sh" %}
 {% include "system.limits_conf.sh" %}
 {% include "system.mounts.sh" %}
 {% include "system.raid.sh" %}
