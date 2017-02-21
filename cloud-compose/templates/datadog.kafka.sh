@@ -383,5 +383,8 @@ init_config:
             alias: kafka.log.flush_rate.rate
 EOF
 # datadog.start
-sh -c "sed 's/api_key:.*/api_key: {{DATADOG_API_KEY}}/' /etc/dd-agent/datadog.conf.example > /etc/dd-agent/datadog.conf"
+{%- if DATADOG_API_KEY is defined %}
+DATADOG_API_KEY="{{DATADOG_API_KEY}}"
+{%- endif %}
+sh -c "sed 's/api_key:.*/api_key: ${DATADOG_API_KEY}/' /etc/dd-agent/datadog.conf.example > /etc/dd-agent/datadog.conf"
 service datadog-agent restart
