@@ -1,13 +1,13 @@
 version: "2"
 services:
   kafka:
-    image: washpost/kafka:0.10.1.1
+    image: washpost/kafka:0.11.0.2
     restart: always
     network_mode: host
     volumes:
       - "/data:/data"
     {%- if logging is defined and logging.driver is defined and logging.driver == "awslogs" %}
-    logging: 
+    logging:
       driver: awslogs
       options:
         awslogs-group: {{ logging.meta.group }}
