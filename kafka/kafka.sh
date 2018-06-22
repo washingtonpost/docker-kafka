@@ -34,6 +34,7 @@ log.segment.bytes=${LOG_SEGMENT_BYTES:-1073741824}
 replica.lag.time.max.ms=${REPLICA_LAG_TIME_MAX_MS:-60000}
 auto.leader.rebalance.enable=${AUTO_LEADER_REBALANCE_ENABLE:-true}
 default.replication.factor=${DEFAULT_REPLICATION_FACTOR:-3}
+offsets.topic.replication.factor=${DEFAULT_OFFSETS_REPLICATION_FACTOR:-3}
 
 # Log configuration
 num.partitions=${NUM_PARTITIONS:-6}
